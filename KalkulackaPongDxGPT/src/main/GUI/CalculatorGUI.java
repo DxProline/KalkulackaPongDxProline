@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -19,7 +21,7 @@ public class CalculatorGUI extends JFrame {
 
         // Vytvoření panelu pro tlačítka
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(5, 4));
+        buttonPanel.setLayout(new GridLayout(6, 4));
 
         // Vytvoření tlačítek
         String[] buttonLabels = {
@@ -40,6 +42,15 @@ public class CalculatorGUI extends JFrame {
         // Vytvoření textového pole pro vstup
         inputField = new JTextField();
         inputField.setFont(new Font("Arial", Font.PLAIN, 24));
+        inputField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+                    e.consume();
+                }
+            }
+        });
 
         // Vytvoření panelu pro Pong
         pongPanel = new PongPanel();
