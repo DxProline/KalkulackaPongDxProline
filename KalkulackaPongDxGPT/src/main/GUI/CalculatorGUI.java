@@ -128,16 +128,9 @@ public class CalculatorGUI extends JFrame {
             } else if (buttonText.equals("x^n")) {
                 // Přechod do módu výpočtu mocniny
                 inputField.setText(currentText + " ^ ");
-            } else if (buttonText.equals("Hra")) {
-                // Zobrazení nebo skrytí hry Pong
-                if (pongPanel.isVisible()) {
-                    pongPanel.setVisible(false);
-                    startButton.setEnabled(false);
-                    restartButton.setVisible(false);
-                } else {
-                    pongPanel.setVisible(true);
-                    startButton.setEnabled(true);
-                }
+            } else {
+                // Přidání textu tlačítka do vstupního pole
+                inputField.setText(currentText + buttonText);
             }
         }
 
@@ -169,6 +162,9 @@ public class CalculatorGUI extends JFrame {
         private int aiPaddleY;
         private boolean aiEnabled;
 
+        // Přidáme KeyListener do PongPanel pro sledování stisků kláves
+        // Přidáme KeyListener do PongPanel pro sledování stisků kláves
+        // Přidáme KeyListener do PongPanel pro sledování stisků kláves
         public PongPanel() {
             paddleY = HEIGHT / 2;
             ballX = WIDTH / 2;
@@ -181,19 +177,26 @@ public class CalculatorGUI extends JFrame {
             aiPaddleY = HEIGHT / 2;
             aiEnabled = true;
 
-            addMouseListener(new MouseAdapter() {
+            addKeyListener(new KeyAdapter() {
                 @Override
-                public void mouseMoved(MouseEvent e) {
+                public void keyPressed(KeyEvent e) {
                     if (!aiEnabled) {
-                        paddleY = e.getY();
+                        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                            paddleY -= 10; // Pohyb nahoru při stisku klávesy šipka vlevo
+                        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                            paddleY += 10; // Pohyb dolů při stisku klávesy šipka vpravo
+                        }
                         if (paddleY < 0) {
                             paddleY = 0;
                         } else if (paddleY > HEIGHT - PADDLE_HEIGHT) {
                             paddleY = HEIGHT - PADDLE_HEIGHT;
                         }
+                        repaint();
                     }
                 }
             });
+            setFocusable(true);
+            requestFocusInWindow(); // Přidáme tuto řádku pro zajištění, že PongPanel má fokus
         }
 
         public void startGame() {
@@ -262,6 +265,8 @@ public class CalculatorGUI extends JFrame {
                 g.drawString(resultText, x, y);
             }
         }
+
+
 
         private void moveBall() {
             if (!gameRunning) {
